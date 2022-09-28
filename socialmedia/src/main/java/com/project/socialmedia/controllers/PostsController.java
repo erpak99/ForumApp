@@ -1,6 +1,7 @@
 package com.project.socialmedia.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,16 +30,11 @@ public class PostsController {
 		this.postService = postService;
 	}
 	
-	@GetMapping("getall")
-	public List<PostResponse> getAllPosts() {
-		return this.postService.getAllPosts();
+	@GetMapping
+	public List<PostResponse> getAllPosts(@RequestParam Optional<Long> userId) {
+		return this.postService.getAllPosts(userId);
 	}
 	
-	
-	@GetMapping("/getpostsbyuserid")
-	public DataResult<List<Post>> getPostsByUserId(@RequestParam Long id) {
-		return this.postService.getPostsByUserId(id);
-	} 
 	
 	@GetMapping("/{postId}")
 	public Post getPostById(@PathVariable Long postId) {
@@ -46,13 +42,13 @@ public class PostsController {
 	}
 										
 	@PostMapping
-	public Post createOnePost(@RequestBody PostCreateRequest newPostRequest) {
-		return this.postService.createOnePost(newPostRequest);
+	public Post createOnePost(@RequestBody PostCreateRequest newPostCreateRequest) {
+		return this.postService.createOnePost(newPostCreateRequest);
 	}
 	
 	@PutMapping("/{postId}")
-	public DataResult<Post> updateOnePost(@PathVariable Long postId, @RequestBody PostUpdateRequest updatePost) {
-		return this.postService.updateOnePost(postId, updatePost);
+	public DataResult<Post> updateOnePost(@PathVariable Long postId, @RequestBody PostUpdateRequest newPostUpdateRequest ) {
+		return this.postService.updateOnePost(postId, newPostUpdateRequest);
 	}
 	
 	@DeleteMapping("/{postId}")

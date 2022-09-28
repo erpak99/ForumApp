@@ -8,8 +8,10 @@ import com.project.socialmedia.entities.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-	List<Comment> getByUser_Id(Long id);
+	List<Comment> findByUser_IdAndPost_Id(Long userId, Long postId);
 
-	List<Comment> getByPost_Id(Long id);
+	List<Comment> findByUser_Id(Long userId);
+
+	List<Comment> findByPost_Id(Long postId);
 
 }

@@ -1,25 +1,19 @@
 package com.project.socialmedia.responses;
 
-import java.util.List;
+import com.project.socialmedia.entities.Comment;
 
-import com.project.socialmedia.entities.Post;
-
-public class PostResponse {
+public class CommentResponse {
 
 	Long id;
 	Long userId;
 	String userName;
-	String title;
 	String text;
-	List<LikeResponse> postLikes;
-	
-	public PostResponse(Post entity, List<LikeResponse> likes) { // post entitysini postresponse'a ceviren mapper
+
+	public CommentResponse(Comment entity) {
 		this.id = entity.getId();
 		this.userId = entity.getUser().getId();
 		this.userName = entity.getUser().getUserName();
-		this.title = entity.getTitle();
 		this.text = entity.getText();
-		this.postLikes = likes;
 	}
 
 	public Long getId() {
@@ -44,14 +38,6 @@ public class PostResponse {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public String getText() {

@@ -1,6 +1,7 @@
 package com.project.socialmedia.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import com.project.socialmedia.core.results.DataResult;
 import com.project.socialmedia.entities.Comment;
 import com.project.socialmedia.requests.CommentCreateRequest;
 import com.project.socialmedia.requests.CommentUpdateRequest;
+import com.project.socialmedia.responses.CommentResponse;
 import com.project.socialmedia.services.CommentService;
 
 @RestController
@@ -28,24 +30,15 @@ public class CommentsController {
 		this.commentService = commentService;
 	}
 	
-	@GetMapping("/getall")
-	public DataResult<List<Comment>> getAllComments() {
-		return commentService.getAllComments();
+	@GetMapping
+	public List<CommentResponse> getAllComments(@RequestParam Optional<Long> userId,
+													@RequestParam Optional<Long> postId) {
+		return commentService.getAllCommentsWithParam(userId, postId);
 	}
 	
 	@GetMapping("/{id}")
 	public DataResult<Comment> getCommentById(@PathVariable Long id) {
 		return commentService.getCommentById(id);										
-	}
-	
-	@GetMapping("/getcommentsbyuserid")
-	public DataResult<List<Comment>> getCommentsByUserId(@RequestParam Long id) {
-		return commentService.getCommentsByUserId(id);
-	}
-	
-	@GetMapping("/getcommentsbypostid")
-	public DataResult<List<Comment>> getCommentsByPostId(@RequestParam Long id) {
-		return commentService.getCommentsByPostId(id);
 	}
 	
 	@PostMapping
@@ -62,7 +55,4 @@ public class CommentsController {
 	public void deleteOneComment(@PathVariable Long id) {
 		commentService.deleteOneComment(id);
 	}
-
-
-
 }

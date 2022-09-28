@@ -2,6 +2,7 @@ package com.project.socialmedia.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import com.project.socialmedia.entities.User;
 import com.project.socialmedia.repositories.CommentRepository;
 import com.project.socialmedia.requests.CommentCreateRequest;
 import com.project.socialmedia.requests.CommentUpdateRequest;
+import com.project.socialmedia.responses.CommentResponse;
 
 @Service
 public class CommentService {
@@ -28,17 +30,19 @@ public class CommentService {
 		this.userService = userService;
 	}
 
-	public DataResult<List<Comment>> getAllComments() {
-		return new SuccessDataResult<List<Comment>>(commentRepository.findAll(),"All comments...");
-	}
-
-	public DataResult<List<Comment>> getCommentsByUserId(Long id) {
-		return new SuccessDataResult<List<Comment>>(commentRepository.getByUser_Id(id),"All comments by specific user id...");
-	}
-
-	public DataResult<List<Comment>> getCommentsByPostId(Long id) {
-		return new SuccessDataResult<List<Comment>>(commentRepository.getByPost_Id(id),"All comments by specific post id...");
-	}
+	public List<CommentResponse> getAllCommentsWithParam(Optional<Long> userId,
+		     Optional<Long> postId) {
+		List<Comment> comments;
+		if(userId.isPresent() && postId.isPresent()) {
+			comments = commentRepository.findByUser_IdAndPost_Id(userId.get(), postId.get());
+		}else if(userId.isPresent()) {
+			comments = commentRepository.findByUser_Id(userId.get());
+		}else if(postId.isPresent()) {
+			comments = commentRepository.findByPost_Id(postId.get());
+		}else
+			comments = commentRepository.findAll();
+		return comments.stream().map(comment -> new CommentResponse(comment)).collect(Collectors.toList());
+}
 
 	public DataResult<Comment> getCommentById(Long id) {
 		return new SuccessDataResult<Comment>(commentRepository.findById(id).orElse(null), "Comment by specific id...") ;
@@ -72,6 +76,7 @@ public class CommentService {
 	public void deleteOneComment(Long id) {
 		commentRepository.deleteById(id);
 	}
+
 	
 	
 }
